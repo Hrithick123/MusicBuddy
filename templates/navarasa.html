@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Navarasa Emotion Game</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body class="bg-gradient-to-b from-indigo-50 to-indigo-100 min-h-screen flex flex-col justify-center items-center text-gray-800">
+    <!-- Header Section -->
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-4xl font-bold text-center mb-6 text-indigo-800">Navarasa Emotion Game</h1>
+        <p class="text-lg text-center text-gray-700 mb-6">Listen to the audio clip and select the emotion you think it represents!</p>
+    </div>
+
+    <!-- Game Section -->
+    <div id="game" class="bg-white shadow-lg rounded-lg p-6 w-full max-w-xl">
+        <audio id="audio-player" controls class="w-full rounded mb-4 shadow"></audio>
+
+        <!-- Options for Emotions -->
+        <div id="options" class="grid grid-cols-2 gap-4 mb-6">
+            <!-- Options will be dynamically added here -->
+        </div>
+
+        <!-- Feedback Section -->
+        <p id="feedback" class="text-lg text-center mb-4 font-semibold"></p>
+
+        <!-- Score Section -->
+        <div class="flex justify-between items-center bg-indigo-100 p-4 rounded-lg">
+            <span class="text-lg font-bold text-indigo-800">Score:</span>
+            <span id="score" class="text-2xl font-bold text-indigo-600">0</span>
+        </div>
+    </div>
+
+    <!-- Script Section -->
+    <script>
+        let currentAudio = null;
+
+        // Load a new question
+        function loadQuestion() {
+            $.get('/get_question', function(data) {
+                if (data.audio) {
+                    $('#audio-player').attr('src', data.audio); // Set the audio source
+                    $('#options').empty(); // Clear existing buttons
+                    data.options.forEach(option => {
+                        $('#options').append(`
+                            <button
+                                onclick="submitAnswer('${option}')"
+                                class="bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg transition-colors">
+                                ${option}
+                            </button>
+                        `);
+                    });
+                    $('#feedback').text(''); // Clear feedback
+                } else {
+                    // If no more questions, display game over screen
+                    $('#game').html(`
+                        <h2 class="text-3xl font-bold text-center text-indigo-800 mb-4">Game Over!</h2>
+                        <p class="text-lg text-center text-gray-700 mb-6">Your final score is:
+                            <span class="text-2xl font-bold text-indigo-600">${$('#score').text()}</span>
+                        </p>
+                        <button
+                            onclick="restartGame()"
+                            class="bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-3 px-6 rounded-lg transition-colors">
+                            Restart Game
+                        </button>
+                    `);
+                }
+            });
+        }
+
+        // Submit the user's answer
+        function submitAnswer(answer) {
+    $.ajax({
+        url: '/submit_answer',
+        type: 'POST',
+        contentType: 'application/json', // Specify the content type as JSON
+        data: JSON.stringify({ answer: answer }), // Send the answer as JSON
+        success: function(data) {
+            $('#feedback').text(data.correct ? 'Correct!' : `Wrong! The correct answer was ${data.correct_answer}.`);
+            $('#feedback').removeClass('text-red-600 text-green-600').addClass(data.correct ? 'text-green-600' : 'text-red-600');
+            $('#score').text('Score: ' + data.score);
+            setTimeout(loadQuestion, 1500); // Load the next question after 1.5 seconds
+        },
+        error: function() {
+            $('#feedback').text('An error occurred. Please try again.');
+            $('#feedback').addClass('text-red-600');
+        }
+    });
+}
+
+
+        // Restart the game
+        function restartGame() {
+            location.reload();
+        }
+
+        // Initialize the game
+        $(document).ready(function() {
+            loadQuestion();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> The Alankaar Game</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/static/js/game.js" defer></script>
+</head>
+<body class="bg-gradient-to-b from-amber-50 to-amber-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-4xl font-bold text-center mb-8 text-amber-800">The Alankaar Game</h1>
+
+        <!-- Mode Selection -->
+       <div class="flex justify-center gap-4 mb-8">
+    <button class="mode-button bg-amber-500 text-white px-6 py-3 rounded-lg hover:bg-amber-700 transition-colors" data-mode="recognition">
+        Pattern Recognition
+    </button>
+    <button class="mode-button bg-amber-500 text-white px-6 py-3 rounded-lg hover:bg-amber-700 transition-colors" data-mode="composition">
+        Compose Pattern
+    </button>
+    <button class="mode-button bg-amber-500 text-white px-6 py-3 rounded-lg hover:bg-amber-700 transition-colors" data-mode="practice">
+        Free Practice
+    </button>
+    <button class="mode-button bg-amber-500 text-white px-6 py-3 rounded-lg hover:bg-amber-700 transition-colors" data-mode="sour_note">
+        Sour Note
+    </button>
+           <button
+    class="mode-button bg-indigo-500 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition-colors"
+    onclick="window.location.href='/navarasa'">
+    Navarasa
+</button>
+
+</div>
+
+
+        <!-- Game Controls -->
+        <div id="gameControls" class="mb-8">
+            <div class="text-center mb-4">
+                <label class="text-lg font-medium mr-2 text-amber-900">Level:</label>
+                <select id="levelSelect" class="px-4 py-2 rounded border border-amber-300 bg-white">
+                    <option value="1">Level 1 (3 notes)</option>
+                    <option value="2">Level 2 (Auditory)</option>
+                    <option value="3">Level 3 (5 notes)</option>
+                </select>
+            </div>
+            <div class="text-center">
+                <button id="playPattern" class="bg-amber-500 text-white px-6 py-3 rounded-lg hover:bg-amber-600">
+                    Play Pattern
+                </button>
+                <button id="submitAnswer" class="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 ml-4" disabled>
+                    Submit Answer
+                </button>
+            </div>
+        </div>
+
+        <!-- Composition Controls -->
+        <div id="compositionControls" class="mb-8 hidden">
+            <div class="text-center mb-4">
+                <h3 class="text-lg font-bold text-amber-800 mb-2">Your Composition</h3>
+                <div id="composedSequence" class="min-h-[40px] bg-white p-4 rounded-lg shadow-inner mb-4"></div>
+                <button id="playComposition" class="bg-amber-500 text-white px-6 py-3 rounded-lg hover:bg-amber-600">
+                    Play Composition
+                </button>
+                <button id="clearComposition" class="bg-red-500 text-white px-6 py-3 rounded-lg hover:bg-red-600 ml-4">
+                    Clear
+                </button>
+            </div>
+        </div>
+
+        <!-- Practice Mode Message -->
+        <div id="practiceMessage" class="mb-8 hidden">
+            <p class="text-center text-lg text-amber-800">Practice Mode: Click any note to play it!</p>
+        </div>
+
+        <!-- Identify the Sour Note Section -->
+<!-- Sour Note Section -->
+<div id="sourNoteGame" class="hidden">
+    <h2 class="text-2xl font-bold text-center text-amber-800 mb-4">Identify the Sour Note</h2>
+    <p class="text-center text-lg text-amber-800 mb-4">A melody will be played with one sour note. Can you identify it?</p>
+
+    <div class="text-center mb-4">
+        <button id="startSourNoteGame" class="bg-amber-500 text-white px-6 py-3 rounded-lg hover:bg-amber-600" onclick="startSourNoteGame()">
+            Play Melody
+        </button>
+    </div>
+
+    <div id="sourNoteFeedback" class="text-center text-lg mb-4"></div>
+
+    <div id="sourNoteButtons" class="grid grid-cols-6 gap-4 md:grid-cols-12">
+        <!-- Buttons will be populated dynamically -->
+    </div>
+
+    <div class="text-center mt-4">
+        <button id="submitSourNote" class="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600" onclick="submitSourNote()" disabled>
+            Submit Answer
+        </button>
+    </div>
+</div>
+
+
+
+        <!-- Sitar/Veena String UI -->
+        <div class="bg-gradient-to-r from-amber-100 to-amber-200 p-8 rounded-lg shadow-lg mb-8">
+            <div id="sitarString" class="grid grid-cols-6 gap-4 md:grid-cols-12">
+                <!-- Notes will be populated by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Score Display -->
+        <div class="text-center bg-white p-6 rounded-lg shadow-md">
+            <h2 class="text-2xl font-bold mb-2 text-amber-800">Score: <span id="score">0</span></h2>
+            <p id="feedback" class="text-lg font-medium"></p>
+        </div>
+    </div>
+</body>
+</html>
