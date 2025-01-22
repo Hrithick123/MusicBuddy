@@ -72,24 +72,23 @@
 
         // Submit the user's answer
         function submitAnswer(answer) {
-    $.ajax({
-        url: '/submit_answer',
-        type: 'POST',
-        contentType: 'application/json', // Specify the content type as JSON
-        data: JSON.stringify({ answer: answer }), // Send the answer as JSON
-        success: function(data) {
-            $('#feedback').text(data.correct ? 'Correct!' : `Wrong! The correct answer was ${data.correct_answer}.`);
-            $('#feedback').removeClass('text-red-600 text-green-600').addClass(data.correct ? 'text-green-600' : 'text-red-600');
-            $('#score').text('Score: ' + data.score);
-            setTimeout(loadQuestion, 1500); // Load the next question after 1.5 seconds
-        },
-        error: function() {
-            $('#feedback').text('An error occurred. Please try again.');
-            $('#feedback').addClass('text-red-600');
+            $.ajax({
+                url: '/submit_answer',
+                type: 'POST',
+                contentType: 'application/json', // Specify the content type as JSON
+                data: JSON.stringify({ answer: answer }), // Send the answer as JSON
+                success: function(data) {
+                    $('#feedback').text(data.correct ? 'Correct!' : `Wrong! The correct answer was ${data.correct_answer}.`);
+                    $('#feedback').removeClass('text-red-600 text-green-600').addClass(data.correct ? 'text-green-600' : 'text-red-600');
+                    $('#score').text('Score: ' + data.score);
+                    setTimeout(loadQuestion, 1500); // Load the next question after 1.5 seconds
+                },
+                error: function() {
+                    $('#feedback').text('An error occurred. Please try again.');
+                    $('#feedback').addClass('text-red-600');
+                }
+            });
         }
-    });
-}
-
 
         // Restart the game
         function restartGame() {
@@ -101,10 +100,23 @@
             loadQuestion();
         });
     </script>
-    <footer class="bg-amber-800 text-white text-center py-4 mt-auto">
-        <p>
-            Designed By <a href="https://hrithick123.github.io/hrithickfolio/" target="_blank" class="underline hover:text-amber-300">Hrithick</a>
-        </p>
+
+    <!-- Footer Section -->
+    <footer class="bg-amber-800 text-white text-center py-4 mt-auto w-full">
+        <div class="container mx-auto px-4 flex flex-col sm:flex-row justify-between items-center">
+            <!-- Back Button -->
+            <a href="/" class="flex items-center text-amber-300 hover:text-white transition-colors mb-4 sm:mb-0">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+                </svg>
+                Back to Home
+            </a>
+
+            <!-- Footer Text -->
+            <p class="text-sm sm:text-base">
+                Designed By <a href="https://hrithick123.github.io/hrithickfolio/" target="_blank" class="underline hover:text-amber-300">Hrithick</a>
+            </p>
+        </div>
     </footer>
 </body>
 </html>
