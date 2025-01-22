@@ -37,6 +37,7 @@ google-auth-oauthlib==1.2.0
 google-pasta==0.2.0
 googletrans==4.0.0rc1
 grpcio==1.60.0
+gunicorn
 h11==0.9.0
 h2==3.2.0
 h5py==3.10.0
