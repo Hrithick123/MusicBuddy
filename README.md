@@ -1,4 +1,4 @@
-# Music Buddy - Alankaar  
+# Music Buddy - Alankaar  - [Click Here To Play](https://musicbuddy.onrender.com)
 
 Music Buddy - Alankaar is a gamified platform designed to make Indian classical music education more interactive and engaging. Developed using **Music Handling and Music Information Retrieval (MIR)** techniques, it provides real-time feedback, allowing learners to practice and refine their musical skills effectively.  
 
