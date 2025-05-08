@@ -3,16 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> Pitch Tracing - Music BUddy - Hrithick</title>
+    <title>Pitch Tracing - Music Buddy - Hrithick</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="/static/js/compare.js" defer></script>
 </head>
 <body class="bg-gradient-to-b from-amber-50 to-amber-100 min-h-screen flex flex-col justify-center items-center text-gray-800">
     <!-- Header Section -->
-
     <div class="container mx-auto px-4 py-8">
-          <br />
-    <h1 class="text-4xl font-bold text-center mb-8 text-amber-800">Alankaar_2.o</h1>
+        <br />
+        <h1 class="text-4xl font-bold text-center mb-8 text-amber-800">Alankaar_2.o</h1>
         <h1 class="text-3xl font-bold text-center mb-6 text-amber-800">Pitch Matching Game</h1>
     </div>
 
@@ -22,6 +21,20 @@
         <div class="mb-6">
             <label class="block text-lg font-medium text-amber-700 mb-2">Upload the Reference Song</label>
             <input type="file" id="referenceInput" accept="audio/*" class="w-full border rounded px-4 py-2" />
+            <audio id="referencePreview" controls class="hidden w-full mt-2"></audio>
+        </div>
+
+        <!-- Pre-Built Samples -->
+        <div class="mb-6">
+            <label class="block text-lg font-medium text-amber-700 mb-2">Or choose from sample songs</label>
+            <select id="sampleSelect" class="w-full border rounded px-4 py-2 mb-2" onchange="playSampleReference()">
+                <option value="">-- Choose a sample --</option>
+                <option value="/static/sample_songs/Sundari_Kannal_female.mp3">Sundari Kannal - Female</option>
+                <option value="/static/sample_songs/Sundari_Kannal_male.mp3">Sundari Kannal - Male</option>
+                <option value="/static/sample_songs/Thendral_Vanthu_male.mp3">Thendral Vanthu - Male</option>
+                <option value="/static/sample_songs/Thendral_Vanthu_female.mp3">Thendral Vanthu - Female</option>
+            </select>
+            <audio id="samplePreview" controls class="hidden w-full mt-2"></audio>
         </div>
 
         <!-- Record or Upload User Audio -->
@@ -48,15 +61,12 @@
     <!-- Footer Section -->
     <footer class="bg-amber-800 text-white text-center py-4 mt-auto w-full">
         <div class="container mx-auto px-4 flex flex-col sm:flex-row justify-between items-center">
-            <!-- Back Button -->
             <a href="/" class="flex items-center text-amber-300 hover:text-white transition-colors mb-4 sm:mb-0">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
                 </svg>
                 Back to Home
             </a>
-
-            <!-- Footer Text -->
             <p class="text-sm sm:text-base">
                 Designed and Developed By <a href="https://hrithick123.github.io/Hrithickfolio/" target="_blank" class="underline hover:text-amber-300">Hrithick</a>
             </p>
