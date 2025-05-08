@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎵 சுருதி ஒப்பீட்டு கருவி - இசை தோழன்</title>
+    <title> Pitch Tracing - Music BUddy - Hrithick</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="/static/js/compare.js" defer></script>
 </head>
@@ -12,24 +12,24 @@
 
     <div class="container mx-auto px-4 py-8">
           <br />
-    <h1 class="text-4xl font-bold text-center mb-8 text-amber-800">Musiக்களி</h1>
-        <h1 class="text-3xl font-bold text-center mb-6 text-amber-800">சுருதி ஒப்பீட்டு கருவி</h1>
+    <h1 class="text-4xl font-bold text-center mb-8 text-amber-800">Alankaar_2.o</h1>
+        <h1 class="text-3xl font-bold text-center mb-6 text-amber-800">Pitch Matching Game</h1>
     </div>
 
     <!-- Game Section -->
     <div class="bg-white shadow-lg rounded-lg p-6 w-full max-w-xl">
         <!-- Reference Upload -->
         <div class="mb-6">
-            <label class="block text-lg font-medium text-amber-700 mb-2">ஒப்பிட வேண்டிய ரெஃபரன்ஸ் பாடலை பதிவேற்று</label>
+            <label class="block text-lg font-medium text-amber-700 mb-2">Upload the Reference Song</label>
             <input type="file" id="referenceInput" accept="audio/*" class="w-full border rounded px-4 py-2" />
         </div>
 
         <!-- Record or Upload User Audio -->
         <div class="mb-6">
-            <p class="text-lg font-medium text-amber-700 mb-2">உங்கள் குரலை பதிவு செய்யலாம் அல்லது பதிவேற்றலாம்</p>
+            <p class="text-lg font-medium text-amber-700 mb-2">Record your song or Upload your audio</p>
             <div class="flex flex-wrap gap-4 mb-4">
-                <button onclick="startMicRecording()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">🎙️ பதிவு தொடங்கு</button>
-                <button onclick="stopMicRecording()" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">🛑 நிறுத்து</button>
+                <button onclick="startMicRecording()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">🎙️ Recording Started</button>
+                <button onclick="stopMicRecording()" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">🛑 Stop</button>
             </div>
             <input type="file" id="userInput" accept="audio/*" class="w-full border rounded px-4 py-2 mb-2" />
             <audio id="preview" controls class="hidden w-full mt-2"></audio>
@@ -37,7 +37,7 @@
 
         <!-- Compare Button -->
         <div class="text-center mb-4">
-            <button onclick="uploadAndCompare()" class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700">சுருதி ஒப்பிடு</button>
+            <button onclick="uploadAndCompare()" class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700">Match the Pitches</button>
         </div>
 
         <!-- Output -->
@@ -53,8 +53,13 @@
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
                 </svg>
-                முகப்புப்பக்கத்திற்கு திரும்பவும்
+                Back to Home
             </a>
+
+            <!-- Footer Text -->
+            <p class="text-sm sm:text-base">
+                Designed and Developed By <a href="https://hrithick123.github.io/Hrithickfolio/" target="_blank" class="underline hover:text-amber-300">Hrithick</a>
+            </p>
         </div>
     </footer>
 </body>
