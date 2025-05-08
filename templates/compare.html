@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎵 சுருதி ஒப்பீட்டு கருவி - இசை தோழன்</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/static/js/compare.js" defer></script>
+</head>
+<body class="bg-gradient-to-b from-amber-50 to-amber-100 min-h-screen flex flex-col justify-center items-center text-gray-800">
+    <!-- Header Section -->
+
+    <div class="container mx-auto px-4 py-8">
+          <br />
+    <h1 class="text-4xl font-bold text-center mb-8 text-amber-800">Musiக்களி</h1>
+        <h1 class="text-3xl font-bold text-center mb-6 text-amber-800">சுருதி ஒப்பீட்டு கருவி</h1>
+    </div>
+
+    <!-- Game Section -->
+    <div class="bg-white shadow-lg rounded-lg p-6 w-full max-w-xl">
+        <!-- Reference Upload -->
+        <div class="mb-6">
+            <label class="block text-lg font-medium text-amber-700 mb-2">ஒப்பிட வேண்டிய ரெஃபரன்ஸ் பாடலை பதிவேற்று</label>
+            <input type="file" id="referenceInput" accept="audio/*" class="w-full border rounded px-4 py-2" />
+        </div>
+
+        <!-- Record or Upload User Audio -->
+        <div class="mb-6">
+            <p class="text-lg font-medium text-amber-700 mb-2">உங்கள் குரலை பதிவு செய்யலாம் அல்லது பதிவேற்றலாம்</p>
+            <div class="flex flex-wrap gap-4 mb-4">
+                <button onclick="startMicRecording()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">🎙️ பதிவு தொடங்கு</button>
+                <button onclick="stopMicRecording()" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">🛑 நிறுத்து</button>
+            </div>
+            <input type="file" id="userInput" accept="audio/*" class="w-full border rounded px-4 py-2 mb-2" />
+            <audio id="preview" controls class="hidden w-full mt-2"></audio>
+        </div>
+
+        <!-- Compare Button -->
+        <div class="text-center mb-4">
+            <button onclick="uploadAndCompare()" class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700">சுருதி ஒப்பிடு</button>
+        </div>
+
+        <!-- Output -->
+        <div id="swaraScore" class="text-center text-xl font-semibold text-amber-900 mb-4 hidden"></div>
+        <img id="comparisonImage" class="w-full rounded-lg shadow-md hidden" />
+    </div>
+
+    <!-- Footer Section -->
+    <footer class="bg-amber-800 text-white text-center py-4 mt-auto w-full">
+        <div class="container mx-auto px-4 flex flex-col sm:flex-row justify-between items-center">
+            <!-- Back Button -->
+            <a href="/" class="flex items-center text-amber-300 hover:text-white transition-colors mb-4 sm:mb-0">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+                </svg>
+                முகப்புப்பக்கத்திற்கு திரும்பவும்
+            </a>
+        </div>
+    </footer>
+</body>
+</html>
