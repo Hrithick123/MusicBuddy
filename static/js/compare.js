@@ -13,7 +13,7 @@ function startMicRecording() {
     };
 
     mediaRecorder.onstop = () => {
-      recordedBlob = new Blob(recordedChunks, { type: 'audio/webm' }); // Correct MIME type
+      recordedBlob = new Blob(recordedChunks, { type: 'audio/webm' });
       const preview = document.getElementById("preview");
       preview.src = URL.createObjectURL(recordedBlob);
       preview.classList.remove("hidden");
@@ -22,7 +22,6 @@ function startMicRecording() {
     mediaRecorder.start();
     console.log("🎙️ Recording Started...");
 
-    // Change button text and color to indicate recording
     const recordButton = document.querySelector("button[onclick='startMicRecording()']");
     recordButton.innerHTML = "🎙️ Recording...";
     recordButton.classList.remove("bg-blue-600", "hover:bg-blue-700");
@@ -36,51 +35,57 @@ function stopMicRecording() {
     mediaRecorder.stop();
     console.log("🛑 Recording Completed.");
 
-    // Reset the button back to its original state
     const recordButton = document.querySelector("button[onclick='startMicRecording()']");
-    recordButton.innerHTML = "🎙️️ Recording Started...";
+    recordButton.innerHTML = "🎙️ Start Recording";
     recordButton.classList.remove("bg-red-600", "hover:bg-red-700");
     recordButton.classList.add("bg-blue-600", "hover:bg-blue-700");
   }
 }
 
-
 // 📤 Upload both files and get comparison result
 async function uploadAndCompare() {
-  const referenceFile = document.getElementById("referenceInput").files[0];
+  const uploadedReference = document.getElementById("referenceInput").files[0];
+  const selectedSample = document.getElementById("sampleSelect").value;
   const uploadedUserFile = document.getElementById("userInput").files[0];
 
-  if (!referenceFile) {
-    alert("Upload Reference Song");
+  let referenceFile;
+
+  if (uploadedReference) {
+    referenceFile = uploadedReference;
+  } else if (selectedSample) {
+    const response = await fetch(selectedSample);
+    const blob = await response.blob();
+    referenceFile = new File([blob], "sample_reference.mp3", { type: blob.type });
+  } else {
+    alert("Please upload or select a reference song.");
     return;
   }
 
   const userFile = uploadedUserFile || recordedBlob;
   if (!userFile) {
-    alert("Please Record your voice or upload an audio file");
+    alert("Please record your voice or upload an audio file.");
     return;
   }
 
   const formData = new FormData();
   formData.append("original", referenceFile, "reference.wav");
-  formData.append("recorded", userFile, "recorded.webm");  // ✅ use webm for correct format
+  formData.append("recorded", userFile, "recorded.webm");
 
-  const response = await fetch("/compare_audio", {
+  const res = await fetch("/compare_audio", {
     method: "POST",
     body: formData
   });
 
-  if (!response.ok) {
+  if (!res.ok) {
     alert("Error Matching Pitches");
     return;
   }
 
-  const data = await response.json();
+  const data = await res.json();
 
   if (data.image) {
-    const imageUrl = 'data:image/png;base64,' + data.image;
     const img = document.getElementById("comparisonImage");
-    img.src = imageUrl;
+    img.src = 'data:image/png;base64,' + data.image;
     img.classList.remove("hidden");
   }
 
@@ -88,5 +93,36 @@ async function uploadAndCompare() {
     const scoreDiv = document.getElementById("swaraScore");
     scoreDiv.innerText = `🎼 Pitch Matching Accuracy: ${(data.swara_similarity * 100).toFixed(2)}%`;
     scoreDiv.classList.remove("hidden");
+  }
+}
+
+// 🎧 Show uploaded reference preview
+document.getElementById("referenceInput").addEventListener("change", function () {
+  const file = this.files[0];
+  const audio = document.getElementById("referencePreview");
+  if (file) {
+    audio.src = URL.createObjectURL(file);
+    audio.classList.remove("hidden");
+
+    // Reset sample select if uploading custom file
+    document.getElementById("sampleSelect").value = "";
+    document.getElementById("samplePreview").classList.add("hidden");
+  }
+});
+
+// 🎧 Play sample from dropdown
+function playSampleReference() {
+  const selected = document.getElementById("sampleSelect").value;
+  const preview = document.getElementById("samplePreview");
+
+  if (selected) {
+    preview.src = selected;
+    preview.classList.remove("hidden");
+
+    // Clear uploaded input
+    document.getElementById("referenceInput").value = "";
+    document.getElementById("referencePreview").classList.add("hidden");
+  } else {
+    preview.classList.add("hidden");
   }
 }
