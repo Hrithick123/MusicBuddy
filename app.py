@@ -8,6 +8,8 @@ import json
 from io import BytesIO
 import warnings
 
+from analyzer import EnhancedCarnaticAnalyzer
+
 app = Flask(__name__)
 app.secret_key = 'supersecretkey'
 
