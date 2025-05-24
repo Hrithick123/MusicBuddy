@@ -1,19 +1,20 @@
-# Dockerfile
+# Base image
 FROM python:3.11-slim
 
-# Install OS packages
-RUN apt-get update && apt-get install -y ffmpeg libsndfile1 && rm -rf /var/lib/apt/lists/*
+# Install ffmpeg
+RUN apt-get update && apt-get install -y ffmpeg
 
-# Set working directory
+# Set workdir
 WORKDIR /app
 
-# Copy everything
+# Copy code
 COPY . .
 
-# Install Python dependencies
-RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
+# Install dependencies
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Start the Flask app via Gunicorn
-CMD gunicorn -b 0.0.0.0:${PORT:-4000} app:app --timeout 90 --workers 2 --threads 4 --worker-class gthread
+# Expose the port (for local clarity only)
+EXPOSE 4000
 
+# Start Gunicorn with higher timeout
+CMD gunicorn -b 0.0.0.0:${PORT:-4000} app:app --timeout 300 --workers 1 --threads 1 --worker-class gthread
