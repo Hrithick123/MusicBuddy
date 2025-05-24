@@ -15,4 +15,5 @@ RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
 # Start the Flask app via Gunicorn
-CMD ["gunicorn", "-b", "0.0.0.0:$PORT", "app:app", "--timeout", "90", "--workers", "2", "--threads", "4", "--worker-class", "gthread"]
+CMD gunicorn -b 0.0.0.0:${PORT:-4000} app:app --timeout 90 --workers 2 --threads 4 --worker-class gthread
+
