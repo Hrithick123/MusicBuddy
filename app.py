@@ -1,30 +1,21 @@
-from flask import Flask, render_template, jsonify, request, session, send_file
-import random
-import os
-import tempfile
-import librosa
-import numpy as np
-import json
+from flask import Flask, render_template, jsonify, request, session
+import random, os, tempfile, librosa, numpy as np, json, base64
+from pydub import AudioSegment
 from io import BytesIO
 import warnings
-
 from analyzer import EnhancedCarnaticAnalyzer
 
 app = Flask(__name__)
 app.secret_key = 'supersecretkey'
-
-# Configure static folder for audio files
 app.static_folder = 'static'
+
+warnings.filterwarnings("ignore", category=UserWarning)
+warnings.filterwarnings("ignore", category=FutureWarning)
 
 # Notes for the games
 NOTES = ['Sa', 'Re', 'Ga', 'Ma', 'Pa', 'Dha', 'Ni', 'Sa2', 'Re2', 'Ga2', 'Ma2', 'Pa2']
-LEVELS = {
-    1: {'pattern_length': 3, 'points': 10},
-    2: {'pattern_length': 5, 'points': 20},
-    3: {'pattern_length': 7, 'points': 30},
-}
 
-# Navarasa emotions and corresponding audio files
+# Navarasa audio mapping
 NAVARASA_AUDIO = {
     "Shanta": "static/audio/shanta.mp3",
     "Veera": "static/audio/veera.mp3",
@@ -32,18 +23,46 @@ NAVARASA_AUDIO = {
     "Karuna": "static/audio/karuna.mp3",
     "Adbhuta": "static/audio/adbhuta.mp3",
     "Bhayanaka": "static/audio/bhayanaka.mp3"
-
 }
-#"Hasya": "static/audio/hasya.mp3", "Bibhatsa": "static/audio/bibhatsa.mp3","Raudra": "static/audio/raudra.mp3",
-# Home route
+
+LEVELS = {
+    1: {'pattern_length': 3, 'points': 10},
+    2: {'pattern_length': 5, 'points': 20},
+    3: {'pattern_length': 7, 'points': 30},
+}
+
+# --------------------------------------------
+# 📥 Audio Conversion Helper
+# --------------------------------------------
+def convert_to_wav(input_file, ext=".wav"):
+    wav_path = tempfile.mktemp(suffix=ext)
+    audio = AudioSegment.from_file(input_file)
+    audio.export(wav_path, format="wav")
+    return wav_path
+
 def freq_to_swara(freq, tonic=261.63):
     if freq <= 0: return None
     semitone = round(12 * np.log2(freq / tonic)) % 12
     return NOTES[semitone]
 
+# --------------------------------------------
+# 🌐 Routes
+# --------------------------------------------
+
 @app.route('/')
 def index():
     return render_template('index.html')
+
+@app.route('/compare')
+def compare_page():
+    return render_template('compare.html')
+
+@app.route('/navarasa')
+def navarasa():
+    session['score'] = 0
+    session['questions'] = list(NAVARASA_AUDIO.items())
+    random.shuffle(session['questions'])
+    return render_template('navarasa.html')
 
 @app.route('/generate_pattern', methods=['POST'])
 def generate_pattern():
@@ -86,18 +105,6 @@ def check_sour_note():
         return jsonify({'correct': True, 'message': 'Correct! You identified the sour note!'})
     return jsonify({'correct': False, 'message': 'Incorrect! Try again.'})
 
-@app.route('/navarasa')
-def navarasa():
-    session['score'] = 0
-    session['questions'] = list(NAVARASA_AUDIO.items())
-    random.shuffle(session['questions'])
-    return render_template('navarasa.html')
-
-@app.route('/compare')
-def compare_page():
-    return render_template('compare.html')
-
-
 @app.route('/get_question', methods=['GET'])
 def get_question():
     session['questions'] = session.get('questions', list(NAVARASA_AUDIO.items()))
@@ -122,7 +129,9 @@ def submit_answer():
         "score": session.get('score', 0)
     })
 
-# Sing & Match short-pattern comparison
+# --------------------------------------------
+# 🎤 Audio Pitch Analysis (Short Pattern)
+# --------------------------------------------
 @app.route('/analyze_pitch', methods=['POST'])
 def analyze_pitch():
     audio = request.files['audio']
@@ -150,19 +159,17 @@ def analyze_pitch():
         print("Pitch analysis error:", e)
         return jsonify({'accuracy': 0})
 
-# 🔥 Full audio file comparison using EnhancedCarnaticAnalyzer
-import base64
-
+# --------------------------------------------
+# 🎶 Full Audio Comparison with Plot
+# --------------------------------------------
 @app.route('/compare_audio', methods=['POST'])
 def compare_audio():
     try:
         original = request.files['original']
         recorded = request.files['recorded']
 
-        orig_path = tempfile.mktemp(suffix='.wav')
-        rec_path = tempfile.mktemp(suffix='.webm')  # ✅ match extension
-        original.save(orig_path)
-        recorded.save(rec_path)
+        orig_path = convert_to_wav(original)
+        rec_path = convert_to_wav(recorded)
 
         analyzer = EnhancedCarnaticAnalyzer()
         features1 = analyzer.extract_pitch_features(orig_path)
@@ -173,14 +180,13 @@ def compare_audio():
         swara_similarity = analyzer.swara_similarity(dist1, dist2)
 
         fig = analyzer.visualize_comparison(orig_path, rec_path)
-
-        # 🔥 Save the figure to disk for debugging
-        fig.savefig("static/last_comparison.png")
-
         buf = BytesIO()
         fig.savefig(buf, format='png')
         buf.seek(0)
         img_base64 = base64.b64encode(buf.read()).decode('utf-8')
+
+        os.remove(orig_path)
+        os.remove(rec_path)
 
         return jsonify({
             'image': img_base64,
@@ -190,7 +196,9 @@ def compare_audio():
         print("Comparison error:", e)
         return jsonify({'error': str(e)}), 500
 
-# Run the app
+# --------------------------------------------
+# 🚀 Run the App
+# --------------------------------------------
 if __name__ == '__main__':
-    port = int(os.environ.get("PORT",4000))
+    port = int(os.environ.get("PORT", 4000))
     app.run(host="0.0.0.0", port=port)
